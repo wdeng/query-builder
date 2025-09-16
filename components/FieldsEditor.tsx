@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { AppField, DataType } from "../lib/fields";
+import { createAppField } from "../lib/fields";
 
 export type FieldsEditorProps = {
   fields: AppField[];
@@ -19,7 +20,7 @@ export default function FieldsEditor({ fields, onChange, className }: FieldsEdit
     const name = newName.trim();
     const label = (newLabel.trim() || toTitleCase(name));
     if (!name || nameSet.has(name)) return;
-    onChange([...fields, { name, label, dataType: "string" }]);
+    onChange([...fields, createAppField({ name, label, dataType: "string" })]);
     setNewName("");
     setNewLabel("");
   };
@@ -43,7 +44,7 @@ export default function FieldsEditor({ fields, onChange, className }: FieldsEdit
       </div>
       <div className="flex flex-col gap-2">
         {fields.map((f, i) => (
-          <div key={f.name + i} className="flex items-center gap-2">
+          <div key={f.id} className="flex items-center gap-2">
             <input
               className="border rounded px-2 py-1 text-xs w-40"
               value={f.name}
@@ -66,7 +67,7 @@ export default function FieldsEditor({ fields, onChange, className }: FieldsEdit
               <option value="boolean">boolean</option>
               <option value="date">date</option>
             </select>
-            <button className="rounded border px-2 py-1 text-xs" onClick={() => removeField(i)}>Remove</button>
+            <button className="rounded border px-2 py-1 text-xs cursor-pointer transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a]" onClick={() => removeField(i)}>Remove</button>
           </div>
         ))}
         <div className="flex items-center gap-2">
@@ -82,7 +83,7 @@ export default function FieldsEditor({ fields, onChange, className }: FieldsEdit
             onChange={e => setNewLabel(e.target.value)}
             placeholder="label (optional)"
           />
-          <button className="rounded border px-2 py-1 text-xs" onClick={addField}>Add</button>
+          <button className="rounded border px-2 py-1 text-xs cursor-pointer transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a]" onClick={addField}>Add</button>
         </div>
       </div>
     </div>

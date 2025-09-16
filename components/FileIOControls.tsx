@@ -46,8 +46,8 @@ export default function FileIOControls({ onImport, exportData, className }: File
     <div className={className}>
       <input ref={inputRef} type="file" accept=".json,application/json" onChange={onFileChange} className="hidden" />
       <div className="flex items-center gap-2">
-        <button className="rounded border px-2 py-1 text-xs" onClick={() => inputRef.current?.click()}>Import JSON</button>
-        <button className="rounded border px-2 py-1 text-xs" onClick={onExport}>Export JSON</button>
+        <button className="rounded border px-2 py-1 text-xs cursor-pointer transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a]" onClick={() => inputRef.current?.click()}>Import JSON</button>
+        <button className="rounded border px-2 py-1 text-xs cursor-pointer transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a]" onClick={onExport}>Export JSON</button>
       </div>
     </div>
   );

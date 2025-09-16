@@ -8,16 +8,17 @@ import FieldsEditor from "../components/FieldsEditor";
 import FieldsEditorModal from "../components/FieldsEditorModal";
 import type { JsonLogicObject } from "../lib/jsonlogic";
 import type { Field } from "react-querybuilder";
-import type { AppField, defaultAppFields } from "../lib/fields";
+import type { AppField } from "../lib/fields";
+import { createAppField } from "../lib/fields";
 
 export default function Home() {
   const [jsonLogic, setJsonLogic] = useState<JsonLogicObject>({});
   const [fields, setFields] = useState<AppField[]>([
-    { name: "firstName", label: "First Name", dataType: "string" },
-    { name: "lastName", label: "Last Name", dataType: "string" },
-    { name: "age", label: "Age", dataType: "number" },
-    { name: "email", label: "Email", dataType: "string" },
-    { name: "isDev", label: "Is Dev", dataType: "boolean" },
+    createAppField({ name: "firstName", label: "First Name", dataType: "string" }),
+    createAppField({ name: "lastName", label: "Last Name", dataType: "string" }),
+    createAppField({ name: "age", label: "Age", dataType: "number" }),
+    createAppField({ name: "email", label: "Email", dataType: "string" }),
+    createAppField({ name: "isDev", label: "Is Dev", dataType: "boolean" }),
   ]);
   const [resetKey, setResetKey] = useState(0);
 
@@ -41,11 +42,10 @@ export default function Home() {
   );
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto p-6">
+    <div className="w-full max-w-[900px] mx-auto p-6">
       {header}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+      <div className="flex flex-col gap-6 items-stretch">
         <div className="min-h-[400px] border rounded p-3 flex flex-col gap-4">
-          {/* Keep the inline editor for convenience; modal remains the primary control */}
           <QueryBuilderPanel
             initialJsonLogic={jsonLogic}
             appFields={fields}
@@ -53,7 +53,7 @@ export default function Home() {
             resetKey={resetKey}
           />
         </div>
-        <div className="min-h-[400px] border rounded p-3">
+        <div className="min-h-[280px] border rounded p-3">
           <JsonLogicPanel json={jsonLogic} />
         </div>
       </div>

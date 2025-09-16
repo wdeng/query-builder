@@ -3,6 +3,7 @@ import type { Field } from "react-querybuilder";
 export type DataType = "string" | "number" | "boolean" | "date";
 
 export interface AppField {
+  id: string;
   name: string;
   label: string;
   dataType: DataType;
@@ -26,12 +27,20 @@ export function toRqbFields(fields: AppField[]): Field[] {
   return fields.map(toRqbField);
 }
 
+function genId(): string {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+export function createAppField(partial: Omit<AppField, "id">): AppField {
+  return { id: genId(), ...partial };
+}
+
 export const defaultAppFields: AppField[] = [
-  { name: "firstName", label: "First Name", dataType: "string" },
-  { name: "lastName", label: "Last Name", dataType: "string" },
-  { name: "age", label: "Age", dataType: "number" },
-  { name: "email", label: "Email", dataType: "string" },
-  { name: "isDev", label: "Is Dev", dataType: "boolean" },
+  createAppField({ name: "firstName", label: "First Name", dataType: "string" }),
+  createAppField({ name: "lastName", label: "Last Name", dataType: "string" }),
+  createAppField({ name: "age", label: "Age", dataType: "number" }),
+  createAppField({ name: "email", label: "Email", dataType: "string" }),
+  createAppField({ name: "isDev", label: "Is Dev", dataType: "boolean" }),
 ];
 
 
