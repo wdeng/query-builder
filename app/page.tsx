@@ -11,15 +11,28 @@ import type { Field } from "react-querybuilder";
 import type { AppField } from "../lib/fields";
 import { createAppField } from "../lib/fields";
 
+const DEFAULT_FIELDS: Omit<AppField, "id">[] = [
+  { name: "dicom_magnetic_field_strength", label: "Field Strength", dataType: "number" },
+  { name: "dicom_modality_list", label: "DICOM Modality", dataType: "string" },
+  { name: "exam_body_part", label: "Body Part", dataType: "string" },
+  { name: "exam_contrast_string", label: "Contrast", dataType: "string" },
+  { name: "exam_procedure_code_cpt", label: "CPT Code", dataType: "string" },
+  { name: "exam_procedure_modality", label: "Procedure Modality", dataType: "string" },
+  { name: "exam_tags", label: "Exam Tags", dataType: "string" },
+  { name: "exam_trigger", label: "Exam Trigger", dataType: "string" },
+  { name: "member_age_at_study", label: "Member Age", dataType: "number" },
+  { name: "member_business_line_cd", label: "Business Line", dataType: "string" },
+  { name: "member_gender", label: "Gender", dataType: "string" },
+  { name: "number_of_series", label: "Number of Series", dataType: "number" },
+  { name: "number_of_views", label: "Number of Views", dataType: "number" },
+  { name: "views_mentioned", label: "Views Mentioned", dataType: "string" },
+];
+
 export default function Home() {
   const [jsonLogic, setJsonLogic] = useState<JsonLogicObject>({});
-  const [fields, setFields] = useState<AppField[]>([
-    createAppField({ name: "firstName", label: "First Name", dataType: "string" }),
-    createAppField({ name: "lastName", label: "Last Name", dataType: "string" }),
-    createAppField({ name: "age", label: "Age", dataType: "number" }),
-    createAppField({ name: "email", label: "Email", dataType: "string" }),
-    createAppField({ name: "isDev", label: "Is Dev", dataType: "boolean" }),
-  ]);
+  const [fields, setFields] = useState<AppField[]>(
+    DEFAULT_FIELDS.map(createAppField)
+  );
   const [resetKey, setResetKey] = useState(0);
 
   const header = useMemo(

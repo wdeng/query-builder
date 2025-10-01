@@ -20,6 +20,24 @@ export type QueryBuilderPanelProps = {
   resetKey?: number;
 };
 
+function genId(): string {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+function ensureRuleIds(group: RuleGroupType): RuleGroupType {
+  const withIds: RuleGroupType = {
+    ...group,
+    id: group.id ?? genId(),
+    rules: (group.rules ?? []).map((r: any) => {
+      if (r && typeof r === "object" && Array.isArray(r.rules)) {
+        return ensureRuleIds(r as RuleGroupType);
+      }
+      return r && typeof r === "object" ? { ...r, id: r.id ?? genId() } : r;
+    }),
+  };
+  return withIds;
+}
+
 const defaultFields: Field[] = [
   { name: "firstName", label: "First Name" },
   { name: "lastName", label: "Last Name" },
@@ -35,19 +53,19 @@ export default function QueryBuilderPanel({
   onJsonLogicChange,
   resetKey,
 }: QueryBuilderPanelProps) {
-  const [query, setQuery] = useState<RuleGroupType>(() => parseJsonLogicToQuery(initialJsonLogic));
+  const [query, setQuery] = useState<RuleGroupType>(() => ensureRuleIds(parseJsonLogicToQuery(initialJsonLogic)));
 
   // Only reset the internal query when resetKey changes (e.g., on import),
   // so user-added groups/rules are not unexpectedly cleared during edits.
   useEffect(() => {
-    setQuery(parseJsonLogicToQuery(initialJsonLogic));
+    setQuery(ensureRuleIds(parseJsonLogicToQuery(initialJsonLogic)));
   }, [resetKey]);
 
   const fields: Field[] = useMemo(() => {
     const base = appFields ? toRqbFields(appFields) : (baseFields ?? defaultFields);
     const inferred = extractFieldsFromJsonLogic(initialJsonLogic ?? {});
     return mergeFields(base, inferred);
-  }, [initialJsonLogic, baseFields, appFields]);
+  }, [baseFields, appFields, resetKey]);
 
   const handleQueryChange = (next: RuleGroupType) => {
     setQuery(next);
@@ -57,7 +75,7 @@ export default function QueryBuilderPanel({
 
   return (
     <div className="w-full">
-      <QueryBuilder fields={fields} query={query} onQueryChange={handleQueryChange} controlElements={{}} />
+      <QueryBuilder fields={fields} query={query} onQueryChange={handleQueryChange} />
     </div>
   );
 }
